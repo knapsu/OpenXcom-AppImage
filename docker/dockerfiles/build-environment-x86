@@ -1,0 +1,43 @@
+FROM ioft/i386-ubuntu:trusty
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+ADD assets/dpkg_nodoc /etc/dpkg/dpkg.cfg.d/90_nodoc
+ADD assets/dpkg_nolocale /etc/dpkg/dpkg.cfg.d/90_nolocale
+ADD assets/apt_nocache /etc/apt/apt.conf.d/90_nocache
+ADD assets/apt_mindeps /etc/apt/apt.conf.d/90_mindeps
+
+# Add package repositories
+RUN set -e \
+  && apt-get update \
+  && apt-get install -y software-properties-common \
+  && add-apt-repository -y ppa:knapsu/openxcom \
+  && add-apt-repository -y ppa:git-core/ppa \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -rf /tmp/* /var/tmp/* /var/log/*
+
+# Install development tools and libraries
+RUN set -e \
+  && apt-get update \
+  && apt-get install -y \
+    nano \
+    wget \
+    curl \
+    fuse \
+    git \
+    build-essential \
+    cmake \
+    doxygen \
+    python-pip \
+    libsdl1.2-dev \
+    libsdl-gfx1.2-dev \
+    libsdl-image1.2-dev \
+    libsdl-mixer1.2-dev \
+    libyaml-cpp-dev \
+    libboost-dev \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -rf /tmp/* /var/tmp/* /var/log/*
+
+# Install Transifex Client
+RUN set -e \
+  && pip install --upgrade transifex-client
