@@ -21,3 +21,6 @@ script:
 
 after_script:
   - docker stop builder
+
+after_success:
+  - ./scripts/upload.sh *.AppImage
