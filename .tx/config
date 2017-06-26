@@ -1,0 +1,17 @@
+[main]
+host = https://www.transifex.com
+
+[openxcom.openxcom]
+file_filter = translations/openxcom.openxcom/<lang>.yml
+source_lang = en_US
+type = YML
+
+[openxcom.x-com-1]
+file_filter = translations/openxcom.x-com-1/<lang>.yml
+source_lang = en_US
+type = YML
+
+[openxcom.x-com-2]
+file_filter = translations/openxcom.x-com-2/<lang>.yml
+source_lang = en_US
+type = YML

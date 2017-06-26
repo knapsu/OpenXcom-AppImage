@@ -42,6 +42,9 @@ cmake \
 make
 cd ..
 
+# Download translations
+tx pull -a
+
 # Prepare working directory
 rm -rf "appimage"
 mkdir -p "appimage"
@@ -68,15 +71,14 @@ rm -rf "${APPDIR}/usr/lib/nvidia-"*
 find "${APPDIR}/usr/lib/" -type f -print0 | xargs -0 mv -t "${APPDIR}/usr/lib/"
 find "${APPDIR}/usr/lib/" -mindepth 1 -type d -print0 | xargs -0 rm -rf
 
-
 # Copy assets
 cp -r "${WORKDIR}/openxcom/bin/"* "${APPDIR}/usr/share/openxcom/"
 rm -f "${APPDIR}/usr/share/openxcom/openxcom"
 
 # Copy translations
-#cp ${WORKDIR}/translations/openxcom.openxcom/* ${APPDIR}/usr/share/openxcom/common/Language/
-#cp ${WORKDIR}/translations/openxcom.x-com-1/* ${APPDIR}/usr/share/openxcom/standard/xcom1/Language/
-#cp ${WORKDIR}/translations/openxcom.x-com-2/* ${APPDIR}/usr/share/openxcom/standard/xcom2/Language/
+cp -r "${WORKDIR}/translations/openxcom.openxcom/"* "${APPDIR}/usr/share/openxcom/common/Language/"
+cp -r "${WORKDIR}/translations/openxcom.x-com-1/"* "${APPDIR}/usr/share/openxcom/standard/xcom1/Language/"
+cp -r "${WORKDIR}/translations/openxcom.x-com-2/"* "${APPDIR}/usr/share/openxcom/standard/xcom2/Language/"
 
 # Setup desktop integration (launcher, icon, menu entry)
 cp "${WORKDIR}/openxcom/res/linux/openxcom.desktop" "${APPDIR}/${LOWERAPP}.desktop"
