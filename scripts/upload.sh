@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 set +x # Do not leak information
 
 RELEASE_NAME="continuous" # Do not use "latest" as it is reserved by GitHub
@@ -103,9 +103,6 @@ if [ "$TRAVIS_COMMIT" != "$tag_sha" ] ; then
   release_url=$(echo "$release_infos" | grep '"url":' | head -n 1 | cut -d '"' -f 4 | cut -d '{' -f 1)
   echo "release_url: $release_url"
 
-else
-  echo "Release with tag 'continuous' not found. Aborting."
-  exit 1
 fi # if [ "$TRAVIS_COMMIT" != "$tag_sha" ]
 
 echo "Upload binaries to the release..."

@@ -17,10 +17,8 @@ For more information about AppImage package please visit http://appimage.org/ si
 
 ## Docker
 
-Directory `docker` contains files used to create a Docker image of a fully functional build environment. This build environment image is used by Travis CI to create and publish the binaries.
+Directory `docker` contains files used to create a Docker image of a fully functional build environment. This build environment image is used by Travis CI to create and publish the binaries. Using Docker also makes it easy to reproduce builds on other systems.
 
-Docker images:
+### Docker images
 - [knapsu/openxcom-build](https://hub.docker.com/r/knapsu/openxcom-build/)
 - [knapsu/openxcom-build-x86](https://hub.docker.com/r/knapsu/openxcom-build-x86/)
-
-Using Docker makes builds easily reproducible on other systems.
