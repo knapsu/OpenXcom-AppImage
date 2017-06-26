@@ -17,7 +17,7 @@ before_script:
 
 script:
   - docker exec -t builder ${DOCKER_EXEC} ./scripts/build.sh
-  - docker exec -t builder ${DOCKER_EXEC} ls -l --color /openxcom/*.AppImage
+  - docker exec -t builder ${DOCKER_EXEC} ls -l --color /openxcom
 
 after_script:
   - docker stop builder

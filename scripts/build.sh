@@ -23,20 +23,22 @@ case "${ARCH:-$(uname -i)}" in
 esac
 echo "Target architecture: ${TARGET_ARCH}"
 
-COMMIT_HASH=$(git log -n 1 --pretty=format:'%h')
-COMMIT_TIMESTAMP=$(git log -n 1 --pretty=format:'%cd' --date=format:'%Y-%m-%d %H:%M')
-OPENXCOM_VERSION_STRING=".${COMMIT_HASH} (${COMMIT_TIMESTAMP})"
 APPIMAGE_NAME="OpenXcom_$(date -u +'%Y%m%d%H%M')_${TARGET_ARCH}.AppImage"
 
 # Build binaries
 rm -rf "openxcom"
 git clone https://github.com/SupSuper/OpenXcom.git openxcom
 cd "openxcom"
+
+COMMIT_HASH=$(git log -n 1 --pretty=format:'%h')
+COMMIT_TIMESTAMP=$(git log -n 1 --pretty=format:'%cd' --date=format:'%Y-%m-%d %H:%M')
+OPENXCOM_VERSION_STRING=".${COMMIT_HASH} (${COMMIT_TIMESTAMP})"
+
 cmake \
   -DBUILD_PACKAGE=OFF \
- -DCMAKE_BUILD_TYPE="Release" \
- -DOPENXCOM_VERSION_STRING="${OPENXCOM_VERSION_STRING}" \
- .
+  -DCMAKE_BUILD_TYPE="Release" \
+  -DOPENXCOM_VERSION_STRING="${OPENXCOM_VERSION_STRING}" \
+  .
 make
 cd ..
 
