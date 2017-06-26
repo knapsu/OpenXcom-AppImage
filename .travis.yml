@@ -3,6 +3,10 @@ language: cpp
 services:
   - docker
 
+branches:
+  only:
+    - master
+
 env:
   - ARCH=x86_64 DOCKER_IMAGE=knapsu/openxcom-build:latest DOCKER_EXEC=""
   - ARCH=i686 DOCKER_IMAGE=knapsu/openxcom-build-x86:latest DOCKER_EXEC="linux32 --"

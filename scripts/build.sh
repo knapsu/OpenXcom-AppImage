@@ -12,6 +12,7 @@ LOWERAPP=${APP,,}
 . "$SCRIPTDIR/functions.sh"
 
 # Define version number and output file name
+case "${ARCH:-$(uname -i)}" in
   x86_64|amd64)
     TARGET_ARCH="x86-64";;
   i?86)
