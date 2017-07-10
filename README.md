@@ -3,7 +3,7 @@
 ## Introduction
 This repository automates building AppImage packages of OpenXcom game. 
 
-Packages for x86-64 (64-bit Intel/AMD) and x86 (32-bit Intel/AMD) architectures are generated daily.
+Packages for x86-64 (64-bit Intel/AMD) and x86 (32-bit Intel/AMD) architectures are generated daily by Travis CI build system and can be downloaded from https://knapsu.eu/openxcom/.
 
 ## OpenXcom
 OpenXcom is an open-source clone of the popular UFO: Enemy Unknown (X-COM: UFO Defense in USA) turn-based strategy game by MicroProse.

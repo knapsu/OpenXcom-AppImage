@@ -6,6 +6,7 @@ services:
 branches:
   only:
     - master
+    - /v\d+\.\d+.*/
 
 env:
   - ARCH=x86_64 DOCKER_IMAGE=knapsu/openxcom-build:latest DOCKER_EXEC=""
@@ -13,15 +14,13 @@ env:
 
 before_script:
   - docker pull ${DOCKER_IMAGE}
-  - docker run -t -d --privileged --device /dev/fuse --volume ${TRAVIS_BUILD_DIR}:/openxcom -w /openxcom --name builder ${DOCKER_IMAGE}
+  - docker run -t -d --volume ${TRAVIS_BUILD_DIR}:/openxcom -w /openxcom --name builder --device /dev/fuse --privileged ${DOCKER_IMAGE}
 
 script:
   - docker exec -t builder ${DOCKER_EXEC} sh -c "echo '[https://www.transifex.com]\nhostname = https://www.transifex.com\nusername = ${TRANSIFEX_USER}\npassword = ${TRANSIFEX_PASSWORD}' > /root/.transifexrc"
   - docker exec -t builder ${DOCKER_EXEC} ./scripts/build.sh
   - sha1sum *.AppImage
+  - curl --upload-file *.AppImage https://transfer.sh/
 
 after_script:
   - docker stop builder
-
-after_success:
-  - ./scripts/upload.sh *.AppImage
