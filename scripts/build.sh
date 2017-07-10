@@ -2,41 +2,69 @@
 set -e
 
 SCRIPT=$(readlink -f "$0")
-SCRIPTDIR=$(dirname "$SCRIPT")
+SCRIPTDIR=$(dirname "${SCRIPT}")
 WORKDIR=${PWD}
 
-APP=OpenXcom
-LOWERAPP=${APP,,}
-
 # Load helper functions
-. "$SCRIPTDIR/functions.sh"
+source "${SCRIPTDIR}/functions.sh"
 
-# Define version number and output file name
+# Define build variables
+APP="OpenXcom"
+LOWERAPP="plexmediaplayer"
+DATE=$(date -u +'%Y%m%d')
+
+case "$(uname -i)" in
+  x86_64|amd64)
+    SYSTEM_ARCH="x86_64"
+    SYSTEM_PLATFORM="x86-64";;
+  i?86)
+    SYSTEM_ARCH="i686"
+    SYSTEM_PLATFORM="x86";;
+  *)
+    echo "Unsupported system architecture"
+    exit 1;;
+esac
+echo "System architecture: ${SYSTEM_PLATFORM}"
+
 case "${ARCH:-$(uname -i)}" in
   x86_64|amd64)
-    TARGET_ARCH="x86-64";;
+    TARGET_ARCH="x86_64"
+    PLATFORM="x86-64";;
   i?86)
-    TARGET_ARCH="x86";;
+    TARGET_ARCH="i686"
+    PLATFORM="x86";;
   *)
     echo "Unsupported target architecture"
     exit 1;;
 esac
-echo "Target architecture: ${TARGET_ARCH}"
+echo "Target architecture: ${PLATFORM}"
 
-APPIMAGE_NAME="OpenXcom_$(date -u +'%Y%m%d%H%M')_${TARGET_ARCH}.AppImage"
+# Build OpenXcom binaries
+if [ -d openxcom ]; then
+  cd openxcom
+  git clean -xf
+  git pull master
+else
+  git clone https://github.com/SupSuper/OpenXcom.git openxcom
+  cd openxcom
+fi
 
-# Build binaries
-rm -rf "openxcom"
-git clone https://github.com/SupSuper/OpenXcom.git openxcom
-cd "openxcom"
 
+# If building from tag use a specific version of OpenXcom sources
+if [ -n "${TRAVIS_TAG}" ]; then
+  git checkout ${TRAVIS_TAG}
+fi
 COMMIT_HASH=$(git log -n 1 --pretty=format:'%h')
 COMMIT_TIMESTAMP=$(git log -n 1 --pretty=format:'%cd' --date=format:'%Y-%m-%d %H:%M')
 OPENXCOM_VERSION_STRING=".${COMMIT_HASH} (${COMMIT_TIMESTAMP})"
 
+# Set package version string to tag name or if not present to current date with commit hash
+VERSION="${TRAVIS_TAG:-${DATE}_${COMMIT_HASH}}"
+
 cmake \
   -DBUILD_PACKAGE=OFF \
   -DCMAKE_BUILD_TYPE="Release" \
+  -DCMAKE_INSTALL_PREFIX="/usr" \
   -DOPENXCOM_VERSION_STRING="${OPENXCOM_VERSION_STRING}" \
   .
 make
@@ -49,6 +77,7 @@ tx pull -a
 rm -rf "appimage"
 mkdir -p "appimage"
 cd "appimage"
+download_appimagetool
 
 # Initialize AppDir
 mkdir "${APP}.AppDir"
@@ -90,5 +119,10 @@ get_desktopintegration ${LOWERAPP}
 cd "${OLDPWD}"
 
 # Create AppImage bundle
-generate_openxcom_appimage "${APPDIR}" "${APPIMAGE_NAME}"
-mv *.AppImage "${WORKDIR}"
+if [[ "${VERSION}" =~ ^v[0-9]+\.[0-9]+ ]]; then
+  VERSION=${VERSION:1}
+fi
+APPIMAGE_FILE_NAME="OpenXcom_${VERSION}_${PLATFORM}.AppImage"
+cd "${WORKDIR}/appimage"
+./appimagetool -n "${APPDIR}"
+mv *.AppImage "${WORKDIR}/${APPIMAGE_FILE_NAME}"

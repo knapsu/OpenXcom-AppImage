@@ -22,23 +22,6 @@ OPTIONS="-o Debug::NoLocking=1
 -o APT::Install-Suggests=0
 "
 
-# Detect system architecture to know which binaries of AppImage tools
-# should be downloaded and used.
-case "$(uname -i)" in
-  x86_64|amd64)
-    echo "System architecture: x86-64"
-    SYSTEM_ARCH="x86_64";;
-  i?86)
-    echo "System architecture: x86"
-    SYSTEM_ARCH="i686";;
-#  arm*)
-#    echo "System architecture: ARM"
-#    SYSTEM_ARCH="";;
-  *)
-    echo "Unsupported system architecture"
-    exit 1;;
-esac
-
 # Either get the file from remote or from a static place.
 # critical for builds without network access like in Open Build Service
 cat_file_from_url()
@@ -65,7 +48,7 @@ patch_usr()
 # Download AppRun and make it executable
 get_apprun()
 {
-  TARGET_ARCH=${ARCH:-$SYSTEM_ARCH}
+  APPRUN_ARCH=${ARCH:-$TARGET_ARCH}
   wget -c https://github.com/probonopd/AppImageKit/releases/download/continuous/AppRun-${TARGET_ARCH} -O AppRun
   chmod a+x AppRun
 }
@@ -295,11 +278,10 @@ patch_strings_in_file() {
     fi
 }
 
-generate_openxcom_appimage()
+download_appimagetool()
 {
-  # Download appimagetool
+  OUTPUT_DIR=${1:-.}
   URL="https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-${SYSTEM_ARCH}.AppImage"
-  wget -c "$URL" -O appimagetool
-  chmod a+x ./appimagetool
-  ./appimagetool -n -v "$1" "$2"
+  wget -c "$URL" -O "${OUTPUT_DIR}/appimagetool"
+  chmod a+x "${OUTPUT_DIR}/appimagetool"
 }
