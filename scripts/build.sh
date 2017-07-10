@@ -10,7 +10,7 @@ source "${SCRIPTDIR}/functions.sh"
 
 # Define build variables
 APP="OpenXcom"
-LOWERAPP="plexmediaplayer"
+LOWERAPP="openxcom"
 DATE=$(date -u +'%Y%m%d')
 
 case "$(uname -i)" in
@@ -42,8 +42,9 @@ echo "Target architecture: ${PLATFORM}"
 # Build OpenXcom binaries
 if [ -d openxcom ]; then
   cd openxcom
-  git clean -xf
-  git pull master
+  git clean -xdf
+  git checkout master
+  git pull
 else
   git clone https://github.com/SupSuper/OpenXcom.git openxcom
   cd openxcom
