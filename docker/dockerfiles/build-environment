@@ -23,21 +23,23 @@ RUN set -e \
     nano \
     wget \
     curl \
-    fuse \
     git \
     build-essential \
     cmake \
     doxygen \
-    python-pip \
     libsdl1.2-dev \
     libsdl-gfx1.2-dev \
     libsdl-image1.2-dev \
     libsdl-mixer1.2-dev \
     libyaml-cpp-dev \
     libboost-dev \
+    python3-pip \
+    python3-setuptools \
+    fuse \
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /tmp/* /var/tmp/* /var/log/*
 
 # Install Transifex Client
 RUN set -e \
-  && pip install --upgrade transifex-client
+  && pip3 install -U pip \
+  && pip3 install -U transifex-client
