@@ -46,10 +46,9 @@ if [[ "${UPLOAD_SCP}" == "true" ]]; then
   SCP_USER=${SCP_USER:?Missing SCP user variable}
   SCP_SERVER=${SCP_SERVER:?Missing SCP server variable}
   # Decrypt SSH key on Travis CI
-  ls -l keys
   if [[ "${TRAVIS}" == "true" ]]; then
     openssl aes-256-cbc -K $encrypted_2df94c5b0b2b_key -iv $encrypted_2df94c5b0b2b_iv -in keys/id_rsa.enc -out keys/id_rsa -d
+    chmod go-rwx keys/id_rsa
   fi
-  ls -l keys
   scp -i keys/id_rsa *.AppImage ${SCP_USER}@${SCP_SERVER}:${SCP_PATH}
 fi
