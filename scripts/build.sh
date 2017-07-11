@@ -57,16 +57,40 @@ if [ -n "${TRAVIS_TAG}" ]; then
 fi
 COMMIT_HASH=$(git log -n 1 --pretty=format:'%h')
 COMMIT_TIMESTAMP=$(git log -n 1 --pretty=format:'%cd' --date=format:'%Y-%m-%d %H:%M')
-OPENXCOM_VERSION_STRING=".${COMMIT_HASH} (${COMMIT_TIMESTAMP})"
 
-# Set package version string to tag name or if not present to current date with commit hash
-VERSION="${TRAVIS_TAG:-${DATE}_${COMMIT_HASH}}"
+# Check if source code was modified from latest scheduled build.
+if [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]; then
+  echo "Scheduled build. Checking if source code was modified from last build."
+
+  if [ -f "${WORKDIR}/commit-hash" ]; then
+    PREVIOUS_HASH=$(cat "${WORKDIR}/commit-hash")
+  fi
+  echo "Previous source hash: ${PREVIOUS_HASH:-unknown}"
+
+  CURRENT_HASH=$(git log -n 1 --pretty=format:'%H')
+  echo "Current source hash: ${CURRENT_HASH}"
+
+  if [ "${PREVIOUS_HASH}" == "${CURRENT_HASH}" ]; then
+    echo "Source code not modified. Aborting."
+    exit
+  fi
+fi
+
+if [ -n "${TRAVIS_TAG}" ]; then
+  # When building for tag use it as package version number
+  VERSION="${TRAVIS_TAG}"
+  INTERNAL_VERSION_SUFFIX=""
+else
+  # For standard builds use current date and commit hash as pacakge version number
+  VERSION="${DATE}_${COMMIT_HASH}"
+  INTERNAL_VERSION_SUFFIX=".${COMMIT_HASH} (${COMMIT_TIMESTAMP})"
+fi
 
 cmake \
   -DBUILD_PACKAGE=OFF \
   -DCMAKE_BUILD_TYPE="Release" \
   -DCMAKE_INSTALL_PREFIX="/usr" \
-  -DOPENXCOM_VERSION_STRING="${OPENXCOM_VERSION_STRING}" \
+  -DOPENXCOM_VERSION_STRING="${INTERNAL_VERSION_SUFFIX}" \
   .
 make
 cd ..
@@ -81,11 +105,11 @@ cd "appimage"
 download_appimagetool
 
 # Initialize AppDir
-mkdir "${APP}.AppDir"
-mkdir -p "${APP}.AppDir/usr/bin"
-mkdir -p "${APP}.AppDir/usr/lib"
-mkdir -p "${APP}.AppDir/usr/share/openxcom"
-APPDIR="${PWD}/${APP}.AppDir"
+mkdir "AppDir"
+mkdir -p "AppDir/usr/bin"
+mkdir -p "AppDir/usr/lib"
+mkdir -p "AppDir/usr/share/openxcom"
+APPDIR="${PWD}/AppDir"
 
 # Copy binaries
 cp "${WORKDIR}/openxcom/bin/openxcom" "${APPDIR}/usr/bin/"
@@ -127,3 +151,11 @@ APPIMAGE_FILE_NAME="OpenXcom_${VERSION}_${PLATFORM}.AppImage"
 cd "${WORKDIR}/appimage"
 ./appimagetool -n "${APPDIR}"
 mv *.AppImage "${WORKDIR}/${APPIMAGE_FILE_NAME}"
+
+cd "${WORKDIR}"
+sha1sum *.AppImage
+
+# Remember last source code version used by sheduled build
+if [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]; then
+  echo -n "${CURRENT_HASH}" > "${WORKDIR}/commit-hash"
+fi
