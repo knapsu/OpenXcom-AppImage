@@ -2,3 +2,5 @@
 openxcom/
 appimage/
 *.AppImage
+commit-hash
+keys/id_rsa
