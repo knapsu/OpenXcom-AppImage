@@ -39,6 +39,7 @@ fi
 if [[ "${UPLOAD_TRANSFER}" == "true" ]]; then
   echo "Uploading to https://transfer.sh/"
   curl --upload-file *.AppImage https://transfer.sh/
+  echo
 fi
 
 if [[ "${UPLOAD_SCP}" == "true" ]]; then

@@ -77,11 +77,11 @@ if [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]; then
 fi
 
 if [ -n "${TRAVIS_TAG}" ]; then
-  # When building for tag use it as package version number
+  # When building from tag use it as package version number
   VERSION="${TRAVIS_TAG}"
   INTERNAL_VERSION_SUFFIX=""
 else
-  # For standard builds use current date and commit hash as pacakge version number
+  # For standard builds use current date and commit hash as package version number
   VERSION="${DATE}_${COMMIT_HASH}"
   INTERNAL_VERSION_SUFFIX=".${COMMIT_HASH} (${COMMIT_TIMESTAMP})"
 fi

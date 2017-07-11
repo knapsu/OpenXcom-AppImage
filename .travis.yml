@@ -20,7 +20,7 @@ script:
   - echo -e "Host *\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - docker exec -t builder ${DOCKER_EXEC} bash -c "echo -e '[https://www.transifex.com]\nhostname = https://www.transifex.com\nusername = ${TRANSIFEX_USER}\npassword = ${TRANSIFEX_PASSWORD}' > /root/.transifexrc"
   - docker exec -t builder ${DOCKER_EXEC} ./scripts/build.sh
-  - ./scripts/upload.sh --transfer --scp
+  - ./scripts/upload.sh --scp
 
 after_script:
   - docker stop builder
