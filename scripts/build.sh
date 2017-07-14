@@ -59,8 +59,11 @@ COMMIT_HASH=$(git log -n 1 --pretty=format:'%h')
 COMMIT_TIMESTAMP=$(git log -n 1 --pretty=format:'%cd' --date=format:'%Y-%m-%d %H:%M')
 
 # Check if source code was modified from latest scheduled build.
+echo "TRAVIS_EVENT_TYPE: '${TRAVIS_EVENT_TYPE}'"
+env
 if [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]; then
-  echo "Scheduled build. Checking if source code was modified from last build."
+  echo "Scheduled build"
+  echo "Checking if source code was modified since last build"
 
   if [ -f "${WORKDIR}/commit-hash" ]; then
     PREVIOUS_HASH=$(cat "${WORKDIR}/commit-hash")
@@ -71,9 +74,11 @@ if [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]; then
   echo "Current source hash: ${CURRENT_HASH}"
 
   if [ "${PREVIOUS_HASH}" == "${CURRENT_HASH}" ]; then
-    echo "Source code not modified. Aborting."
+    echo "Source code not modified"
     exit
   fi
+else
+  echo "Standard build"
 fi
 
 if [ -n "${TRAVIS_TAG}" ]; then
