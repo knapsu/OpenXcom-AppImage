@@ -14,10 +14,11 @@ env:
 
 before_script:
   - docker pull ${DOCKER_IMAGE}
-  - docker run -t -d --volume ${TRAVIS_BUILD_DIR}:/openxcom -w /openxcom --name builder --device /dev/fuse --privileged ${DOCKER_IMAGE}
+  - env | grep -E "^TRAVIS_" > .env
+  - docker run -t -d --volume ${TRAVIS_BUILD_DIR}:/openxcom -w /openxcom --env-file .env --name builder --device /dev/fuse --privileged ${DOCKER_IMAGE}
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 
 script:
-  - echo -e "Host *\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - docker exec -t builder ${DOCKER_EXEC} bash -c "echo -e '[https://www.transifex.com]\nhostname = https://www.transifex.com\nusername = ${TRANSIFEX_USER}\npassword = ${TRANSIFEX_PASSWORD}' > /root/.transifexrc"
   - docker exec -t builder ${DOCKER_EXEC} ./scripts/build.sh
   - ./scripts/upload.sh --scp
