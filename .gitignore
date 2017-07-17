@@ -1,7 +1,6 @@
 .directory
-.env
 openxcom/
 appimage/
 *.AppImage
-commit-hash
+cache/
 keys/id_rsa

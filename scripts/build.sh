@@ -65,8 +65,8 @@ if [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]; then
   echo "Scheduled build"
   echo "Checking if source code was modified since last build"
 
-  if [ -f "${WORKDIR}/commit-hash" ]; then
-    PREVIOUS_HASH=$(cat "${WORKDIR}/commit-hash")
+  if [ -f "${WORKDIR}/cache/commit-hash" ]; then
+    PREVIOUS_HASH=$(cat "${WORKDIR}/cache/commit-hash")
   fi
   echo "Previous source hash: ${PREVIOUS_HASH:-unknown}"
 
@@ -162,5 +162,6 @@ sha1sum *.AppImage
 
 # Remember last source code version used by sheduled build
 if [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]; then
-  echo -n "${CURRENT_HASH}" > "${WORKDIR}/commit-hash"
+  mkdir -p "${WORKDIR}/cache"
+  echo -n "${CURRENT_HASH}" > "${WORKDIR}/cache/commit-hash"
 fi
