@@ -58,9 +58,7 @@ fi
 COMMIT_HASH=$(git log -n 1 --pretty=format:'%h')
 COMMIT_TIMESTAMP=$(git log -n 1 --pretty=format:'%cd' --date=format:'%Y-%m-%d %H:%M')
 
-# Check if source code was modified from latest scheduled build.
-echo "TRAVIS_EVENT_TYPE: '${TRAVIS_EVENT_TYPE}'"
-env
+# Check if source code was modified since last scheduled build.
 if [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]; then
   echo "Scheduled build"
   echo "Checking if source code was modified since last build"
