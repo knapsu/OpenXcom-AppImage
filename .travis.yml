@@ -14,8 +14,8 @@ env:
 
 before_script:
   - docker pull ${DOCKER_IMAGE}
-  - env | grep -E "^TRAVIS_" > .env
-  - docker run -t -d --volume ${TRAVIS_BUILD_DIR}:/openxcom -w /openxcom --env-file .env --name builder --device /dev/fuse --privileged ${DOCKER_IMAGE}
+  - env | grep -E "^TRAVIS|^DOCKER" > travis.env
+  - docker run -t -d --volume ${TRAVIS_BUILD_DIR}:/openxcom -w /openxcom --env-file travis.env --name builder --device /dev/fuse --privileged ${DOCKER_IMAGE}
   - echo -e "Host *\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 
 script:

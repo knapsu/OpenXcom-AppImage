@@ -158,7 +158,7 @@ mv *.AppImage "${WORKDIR}/${APPIMAGE_FILE_NAME}"
 cd "${WORKDIR}"
 sha1sum *.AppImage
 
-# Remember last source code version used by sheduled build
+# Remember last source code version used by scheduled build
 if [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]; then
   mkdir -p "${WORKDIR}/cache"
   echo -n "${CURRENT_HASH}" > "${WORKDIR}/cache/commit-hash"
