@@ -139,7 +139,10 @@ cp -r "${WORKDIR}/translations/openxcom.x-com-2/"* "${APPDIR}/usr/share/openxcom
 
 # Setup desktop integration (launcher, icon, menu entry)
 cp "${WORKDIR}/openxcom/res/linux/openxcom.desktop" "${APPDIR}/${LOWERAPP}.desktop"
-cp "${WORKDIR}/openxcom/res/linux/icons/openxcom.svg" "${APPDIR}/${LOWERAPP}.svg"
+cp "${WORKDIR}/openxcom/res/linux/icons/openxcom_128x128.png" "${APPDIR}/${LOWERAPP}.png"
+mkdir -p "${APPDIR}/usr/share/icons/hicolor/{48x48,128x128}/apps"
+cp "${WORKDIR}/openxcom/res/linux/icons/openxcom_48x48.png" "${APPDIR}/usr/share/icons/hicolor/48x48/apps/${LOWERAPP}.png"
+cp "${WORKDIR}/openxcom/res/linux/icons/openxcom_128x128.png" "${APPDIR}/usr/share/icons/hicolor/128x128/apps/${LOWERAPP}.png"
 cd "${APPDIR}"
 get_apprun
 get_desktopintegration ${LOWERAPP}
