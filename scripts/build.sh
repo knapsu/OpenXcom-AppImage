@@ -140,7 +140,6 @@ cp -r "${WORKDIR}/translations/openxcom.x-com-2/"* "${APPDIR}/usr/share/openxcom
 # Setup desktop integration (launcher, icon, menu entry)
 cp "${WORKDIR}/openxcom/res/linux/openxcom.desktop" "${APPDIR}/${LOWERAPP}.desktop"
 cp "${WORKDIR}/openxcom/res/linux/icons/openxcom.svg" "${APPDIR}/${LOWERAPP}.svg"
-
 cd "${APPDIR}"
 get_apprun
 get_desktopintegration ${LOWERAPP}
