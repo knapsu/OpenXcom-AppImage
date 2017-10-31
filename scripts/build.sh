@@ -96,12 +96,13 @@ cmake \
   -DOPENXCOM_VERSION_STRING="${INTERNAL_VERSION_SUFFIX}" \
   .
 make
-cd ..
 
 # Download translations
+cd "${WORKDIR}"
 tx pull -a
 
-# Prepare working directory
+# Prepare AppImage working directory
+cd "${WORKDIR}"
 rm -rf "appimage"
 mkdir -p "appimage"
 cd "appimage"
