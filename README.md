@@ -20,7 +20,7 @@ OpenXcom source code is available on GitHub https://github.com/SupSuper/OpenXcom
 
 AppImages is a universal Linux package that can be used in any modern Linux distribution.
 
-For more information about AppImage package please visit http://appimage.org/ site.
+For more information about AppImage package please visit https://appimage.org/ site.
 
 ## Docker
 
