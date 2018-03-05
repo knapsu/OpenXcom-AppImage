@@ -25,7 +25,7 @@ RUN set -e \
     curl \
     git \
     build-essential \
-    cmake \
+    cmake3 \
     doxygen \
     libsdl1.2-dev \
     libsdl-gfx1.2-dev \
