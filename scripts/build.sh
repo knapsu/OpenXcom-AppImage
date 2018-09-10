@@ -3,7 +3,7 @@ set -e
 
 SCRIPT=$(readlink -f "$0")
 SCRIPTDIR=$(dirname "${SCRIPT}")
-WORKDIR=${PWD}
+WORKDIR="${PWD}"
 
 # Load helper functions
 source "${SCRIPTDIR}/appimagekit/functions.sh"
@@ -63,7 +63,7 @@ if [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]; then
   echo "Scheduled build"
   echo "Checking if source code was modified since last build"
 
-  if [ -f "${WORKDIR}/cache/commit-hash" ]; then
+  if [[ -f "${WORKDIR}/cache/commit-hash" ]]; then
     PREVIOUS_HASH=$(cat "${WORKDIR}/cache/commit-hash")
   fi
   echo "Previous source hash: ${PREVIOUS_HASH:-unknown}"
@@ -71,10 +71,12 @@ if [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]; then
   CURRENT_HASH=$(git log -n 1 --pretty=format:'%H')
   echo "Current source hash: ${CURRENT_HASH}"
 
-  if [ "${PREVIOUS_HASH}" == "${CURRENT_HASH}" ]; then
+  if [[ "${PREVIOUS_HASH}" == "${CURRENT_HASH}" ]]; then
     echo "Source code not modified"
     exit
   fi
+elif [[ "${TRAVIS_EVENT_TYPE}" == "api" ]]; then
+  echo "Triggered build"
 else
   echo "Standard build"
 fi
@@ -103,12 +105,12 @@ tx pull -a
 
 # Prepare AppImage working directory
 cd "${WORKDIR}"
-rm -rf "appimage"
 mkdir -p "appimage"
 cd "appimage"
 download_appimagetool
 
 # Initialize AppDir
+rm -rf "AppDir"
 mkdir "AppDir"
 mkdir -p "AppDir/usr/bin"
 mkdir -p "AppDir/usr/lib"
@@ -116,7 +118,7 @@ mkdir -p "AppDir/usr/share/openxcom"
 APPDIR="${PWD}/AppDir"
 
 # Copy binaries
-cp "${WORKDIR}/openxcom/bin/openxcom" "${APPDIR}/usr/bin/"
+cp -p "${WORKDIR}/openxcom/bin/openxcom" "${APPDIR}/usr/bin/"
 
 # Copy libraries
 cd "${APPDIR}"
@@ -147,7 +149,7 @@ mkdir -p "${APPDIR}/usr/share/icons/hicolor/128x128/apps"
 cp "${WORKDIR}/openxcom/res/linux/icons/openxcom_128x128.png" "${APPDIR}/usr/share/icons/hicolor/128x128/apps/${LOWERAPP}.png"
 cd "${APPDIR}"
 get_apprun
-get_desktopintegration ${LOWERAPP}
+get_desktopintegration "${LOWERAPP}" "${SCRIPTDIR}/appimagekit/desktopintegration.sh"
 cd "${OLDPWD}"
 
 # Create AppImage bundle
@@ -163,7 +165,7 @@ cd "${WORKDIR}"
 sha1sum *.AppImage
 
 # Remember last source code version used by scheduled build
-if [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]; then
+if [[ "${TRAVIS}" == "true" ]]; then
   mkdir -p "${WORKDIR}/cache"
   echo -n "${CURRENT_HASH}" > "${WORKDIR}/cache/commit-hash"
 fi
