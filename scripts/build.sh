@@ -6,7 +6,7 @@ SCRIPTDIR=$(dirname "${SCRIPT}")
 WORKDIR=${PWD}
 
 # Load helper functions
-source "${SCRIPTDIR}/functions.sh"
+source "${SCRIPTDIR}/appimagekit/functions.sh"
 
 # Define build variables
 APP="OpenXcom"
