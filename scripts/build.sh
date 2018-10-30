@@ -39,6 +39,9 @@ case "${ARCH:-$(uname -i)}" in
 esac
 echo "Target architecture: ${PLATFORM}"
 
+# Display CMake version
+cmake --version
+
 # Build OpenXcom binaries
 if [ -d openxcom ]; then
   cd openxcom
@@ -49,7 +52,6 @@ else
   git clone https://github.com/SupSuper/OpenXcom.git openxcom
   cd openxcom
 fi
-
 
 # If building from tag use a specific version of OpenXcom sources
 if [ -n "${TRAVIS_TAG}" ]; then
