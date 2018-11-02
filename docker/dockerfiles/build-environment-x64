@@ -46,5 +46,5 @@ RUN set -e \
 
 # Install Transifex Client
 RUN set -e \
-  && pip3 install -U pip \
-  && pip3 install -U transifex-client
+  && python3 -m pip install -U pip \
+  && python3 -m pip install -U transifex-client

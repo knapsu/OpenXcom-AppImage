@@ -1,4 +1,4 @@
-FROM ioft/i386-ubuntu:trusty
+FROM i386/ubuntu:bionic
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -12,7 +12,6 @@ RUN set -e \
   && apt-get update \
   && apt-get install -y software-properties-common \
   && add-apt-repository -y ppa:knapsu/openxcom \
-  && add-apt-repository -y ppa:git-core/ppa \
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /tmp/* /var/tmp/* /var/log/*
 
@@ -25,6 +24,7 @@ RUN set -e \
     curl \
     git \
     build-essential \
+    cmake \
     doxygen \
     libsdl1.2-dev \
     libsdl-gfx1.2-dev \
@@ -38,13 +38,7 @@ RUN set -e \
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /tmp/* /var/tmp/* /var/log/*
 
-# Install CMake
-RUN set -e \
-  && wget https://cmake.org/files/v3.6/cmake-3.6.3-Linux-i386.sh \
-  && sh cmake-3.6.3-Linux-i386.sh --prefix=/usr/local --exclude-subdir \
-  && rm -f cmake-3.6.3-Linux-i386.sh
-
 # Install Transifex Client
 RUN set -e \
-  && pip3 install -U pip \
-  && pip3 install -U transifex-client
+  && python3 -m pip install -U pip \
+  && python3 -m pip install -U transifex-client
