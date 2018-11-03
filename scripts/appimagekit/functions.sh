@@ -56,15 +56,16 @@ patch_usr()
 get_apprun()
 {
   APPRUN_ARCH=${ARCH:-$TARGET_ARCH}
-  wget -c https://github.com/AppImage/AppImageKit/releases/download/10/AppRun-${APPRUN_ARCH} -O AppRun
+  URL="https://github.com/AppImage/AppImageKit/releases/download/11/AppRun-${APPRUN_ARCH}"
+  wget "$URL" -O AppRun
   chmod a+x AppRun
 }
 
 download_appimagetool()
 {
   OUTPUT_DIR=${1:-.}
-  URL="https://github.com/AppImage/AppImageKit/releases/download/10/appimagetool-${SYSTEM_ARCH}.AppImage"
-  wget -c "$URL" -O "${OUTPUT_DIR}/appimagetool"
+  URL="https://github.com/AppImage/AppImageKit/releases/download/11/appimagetool-${SYSTEM_ARCH}.AppImage"
+  wget "$URL" -O "${OUTPUT_DIR}/appimagetool"
   chmod a+x "${OUTPUT_DIR}/appimagetool"
 }
 
