@@ -35,6 +35,7 @@ RUN set -e \
     python3-pip \
     python3-setuptools \
     fuse \
+    file \
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /tmp/* /var/tmp/* /var/log/*
 
