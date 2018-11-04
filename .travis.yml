@@ -10,7 +10,7 @@ branches:
 
 env:
   - DOCKER_IMAGE=knapsu/openxcom-build:trusty
-  - DOCKER_IMAGE=knapsu/openxcom-build-x86:bionic DOCKER_EXEC="linux32 --"
+  - DOCKER_IMAGE=knapsu/openxcom-build-x86:trusty DOCKER_EXEC="linux32 --"
 
 before_script:
   - docker pull ${DOCKER_IMAGE}
