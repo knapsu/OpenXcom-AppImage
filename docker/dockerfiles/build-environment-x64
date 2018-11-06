@@ -36,6 +36,7 @@ RUN set -e \
     python3-setuptools \
     fuse \
     file \
+    ccache \
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /tmp/* /var/tmp/* /var/log/*
 

@@ -42,6 +42,10 @@ echo "Target architecture: ${PLATFORM}"
 # Display CMake version
 cmake --version
 
+# Enable ccache
+export PATH="/usr/lib/ccache:${PATH}"
+export CCACHE_DIR="${WORKDIR}/cache/ccache"
+
 # Build OpenXcom binaries
 if [ -d openxcom ]; then
   cd openxcom
@@ -93,13 +97,16 @@ else
   INTERNAL_VERSION_SUFFIX=".${COMMIT_HASH} (${COMMIT_TIMESTAMP})"
 fi
 
+# Build OpenXcom
+cd "${WORKDIR}/openxcom"
 cmake \
-  -DBUILD_PACKAGE=OFF \
   -DCMAKE_BUILD_TYPE="Release" \
   -DCMAKE_INSTALL_PREFIX="/usr" \
+  -DBUILD_PACKAGE=OFF \
   -DOPENXCOM_VERSION_STRING="${INTERNAL_VERSION_SUFFIX}" \
   .
 make
+ccache -s
 
 # Download translations
 cd "${WORKDIR}"
